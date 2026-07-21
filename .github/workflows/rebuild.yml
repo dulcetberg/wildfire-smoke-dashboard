@@ -31,6 +31,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add wildfire_smoke_dashboard.html
+          git add index.html
           git diff --quiet --cached || git commit -m "Auto-update dashboard $(date -u +%Y-%m-%d)"
           git push

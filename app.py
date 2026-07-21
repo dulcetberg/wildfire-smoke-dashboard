@@ -116,7 +116,7 @@ AQI_COLORS = {
 }
 
 
-def build_dashboard(smoke_gdf, fire_gdf, aqi_df, out_html="wildfire_smoke_dashboard.html"):
+def build_dashboard(smoke_gdf, fire_gdf, aqi_df, out_html="index.html"):
     print("\n[Dashboard] Building Folium map...")
     m = folium.Map(location=[43.0, -85.0], zoom_start=5, tiles="CartoDB dark_matter")
 
