@@ -117,6 +117,15 @@ AQI_COLORS = {
     6: "#7e0023",  # Hazardous
 }
 
+AQI_LABELS = {
+    1: "Good (0-50)",
+    2: "Moderate (51-100)",
+    3: "Unhealthy for Sensitive Groups (101-150)",
+    4: "Unhealthy (151-200)",
+    5: "Very Unhealthy (201-300)",
+    6: "Hazardous (301+)",
+}
+
 
 def build_dashboard(smoke_gdf, fire_gdf, aqi_df, out_html="index.html"):
     print("\n[Dashboard] Building Folium map...")
@@ -225,6 +234,38 @@ def build_dashboard(smoke_gdf, fire_gdf, aqi_df, out_html="index.html"):
     </div>
     """
     m.get_root().html.add_child(folium.Element(title_html))
+
+    legend_rows = "".join(
+        f"""
+        <div style="display:flex; align-items:center; margin-bottom:3px;">
+            <span style="
+                display:inline-block; width:12px; height:12px; border-radius:50%;
+                background:{AQI_COLORS[i]}; margin-right:8px; flex-shrink:0;
+                border:1px solid rgba(255,255,255,0.4);
+            "></span>
+            <span>{AQI_LABELS[i]}</span>
+        </div>"""
+        for i in sorted(AQI_COLORS)
+    )
+    legend_html = f"""
+    <div style="
+        position: fixed;
+        bottom: 55px;
+        left: 10px;
+        z-index: 9999;
+        background: rgba(20, 20, 20, 0.85);
+        color: #f2f2f2;
+        font-family: -apple-system, Helvetica, Arial, sans-serif;
+        font-size: 0.78rem;
+        padding: 10px 14px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    ">
+        <div style="font-weight:600; margin-bottom:6px; color:#ff9a4d;">AQI Legend</div>
+        {legend_rows}
+    </div>
+    """
+    m.get_root().html.add_child(folium.Element(legend_html))
 
     m.save(out_html)
     print(f"\nDashboard saved to {out_html} — open it directly in any browser.")
