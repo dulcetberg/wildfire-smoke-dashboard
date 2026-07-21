@@ -1,0 +1,36 @@
+name: Rebuild wildfire smoke dashboard
+
+on:
+  schedule:
+    # 11:00 UTC daily (~6am Central) — after the previous day's NOAA/AirNow data is available
+    - cron: "0 11 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pipeline
+        env:
+          AIRNOW_API_KEY: ${{ secrets.AIRNOW_API_KEY }}
+        run: python app.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add wildfire_smoke_dashboard.html
+          git diff --quiet --cached || git commit -m "Auto-update dashboard $(date -u +%Y-%m-%d)"
+          git push
