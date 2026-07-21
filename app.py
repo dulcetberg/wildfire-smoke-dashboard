@@ -21,6 +21,8 @@ START_DATE = END_DATE - datetime.timedelta(days=7)
 
 RAW_DIR = "data/raw"
 PROCESSED_DIR = "data/processed"
+os.makedirs(RAW_DIR, exist_ok=True)
+os.makedirs(PROCESSED_DIR, exist_ok=True)
 
 # Chicago-area bounding box, wide enough to catch nearby IN/WI monitors too
 CHI_BBOX = (-88.3, 41.4, -87.3, 42.3)
